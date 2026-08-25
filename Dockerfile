@@ -22,7 +22,8 @@ ENV MAMBA_USER=${MAMBA_USER} \
     PYTHONUNBUFFERED=1 \
     NVIDIA_VISIBLE_DEVICES=all \
     NVIDIA_DRIVER_CAPABILITIES=compute,utility \
-    MAMBA_ROOT_PREFIX=/opt/conda
+    MAMBA_ROOT_PREFIX=/opt/conda \
+    CLI_ARGS="--listen 0.0.0.0 --port 8188"
 
 # ------------------------------
 # Base packages
@@ -92,6 +93,10 @@ RUN set -eux; \
     if [ -f /opt/app/ComfyUI/requirements.txt ]; then \
       micromamba run -p ${MAMBA_ROOT_PREFIX}/envs/pyenv pip install -r /opt/app/ComfyUI/requirements.txt; \
     fi; \
+    micromamba run -p ${MAMBA_ROOT_PREFIX}/envs/pyenv pip install comfy-kitchen==0.2.31 && \
+    sed -i '1s/^/import typing\n/' ${MAMBA_ROOT_PREFIX}/envs/pyenv/lib/python3.11/site-packages/comfy_kitchen/backends/eager/na.py && \
+    sed -i 's/list\[int\]/typing.List[int]/g' ${MAMBA_ROOT_PREFIX}/envs/pyenv/lib/python3.11/site-packages/comfy_kitchen/backends/eager/na.py && \
+    sed -i 's/list\[bool\]/typing.List[bool]/g' ${MAMBA_ROOT_PREFIX}/envs/pyenv/lib/python3.11/site-packages/comfy_kitchen/backends/eager/na.py; \
     if [ -f /opt/app/ComfyUI/custom_nodes/ComfyUI-Manager/requirements.txt ]; then \
       micromamba run -p ${MAMBA_ROOT_PREFIX}/envs/pyenv pip install -r /opt/app/ComfyUI/custom_nodes/ComfyUI-Manager/requirements.txt; \
     fi; \

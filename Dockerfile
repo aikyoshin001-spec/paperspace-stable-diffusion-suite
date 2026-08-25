@@ -165,3 +165,4 @@ USER ${MAMBA_USER}
 
 # Default command (JupyterLab)
 CMD ["jupyter", "lab", "--ip=0.0.0.0", "--port=8888", "--no-browser", "--ServerApp.token=", "--ServerApp.password="]
+

@@ -177,10 +177,10 @@ for d in input output custom_nodes user; do
 done
 
 # Update pre-installed custom nodes after linking
-update_preinstalled_nodes
+# update_preinstalled_nodes
 
 # Install python deps for all custom nodes after linking
-install_custom_node_deps_every_start
+# install_custom_node_deps_every_start
 
 echo "Starting Supervisor (ComfyUI)..."
 # Start supervisord in daemon mode (configured in supervisord.conf)

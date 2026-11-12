@@ -67,10 +67,8 @@ RUN set -eux; \
     if [ -f /opt/app/ComfyUI/requirements.txt ]; then \
       micromamba run -p ${MAMBA_ROOT_PREFIX}/envs/pyenv pip install --no-cache-dir -r /opt/app/ComfyUI/requirements.txt; \
     fi; \
-    micromamba run -p ${MAMBA_ROOT_PREFIX}/envs/pyenv pip install --no-cache-dir comfy-kitchen==0.2.31 && \
-    sed -i '1s/^/import typing\n/' ${MAMBA_ROOT_PREFIX}/envs/pyenv/lib/python3.11/site-packages/comfy_kitchen/backends/eager/na.py && \
-    sed -i 's/list\[int\]/typing.List[int]/g' ${MAMBA_ROOT_PREFIX}/envs/pyenv/lib/python3.11/site-packages/comfy_kitchen/backends/eager/na.py && \
-    sed -i 's/list\[bool\]/typing.List[bool]/g' ${MAMBA_ROOT_PREFIX}/envs/pyenv/lib/python3.11/site-packages/comfy_kitchen/backends/eager/na.py; \
+    micromamba run -p ${MAMBA_ROOT_PREFIX}/envs/pyenv pip install --no-cache-dir --upgrade comfy-kitchen && \
+    micromamba run -p ${MAMBA_ROOT_PREFIX}/envs/pyenv python -c 'import glob, os; p = os.environ["MAMBA_ROOT_PREFIX"] + "/envs/pyenv/lib/python3.11/site-packages/comfy_kitchen/backends/eager/*.py"; [open(f, "w").write("import typing\n" + c.replace("list[int]", "typing.List[int]").replace("list[bool]", "typing.List[bool]")) for f in glob.glob(p) if "list[int]" in (c := open(f).read()) or "list[bool]" in c]'; \
     if [ -f /opt/app/ComfyUI/custom_nodes/ComfyUI-Manager/requirements.txt ]; then \
       micromamba run -p ${MAMBA_ROOT_PREFIX}/envs/pyenv pip install --no-cache-dir -r /opt/app/ComfyUI/custom_nodes/ComfyUI-Manager/requirements.txt; \
     fi; \
